@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Script para interactuar con el contenedor de desarrollo
+# Uso: ./dev [comando]
+# Comandos disponibles:
+#   up       - Levanta el contenedor de desarrollo
+#   down     - Detiene el contenedor de desarrollo
+#   bash     - Abre una shell interactiva
+#   test     - Corre los tests
+#   run      - Ejecuta la app
+#   build    - Compila el proyecto
+#   watch    - Corre tests automáticamente al guardar
+#   clean    - Limpia el build
+
+set -e
+
+CMD="${1:-bash}"
+
+case "$CMD" in
+  up)
+    sudo docker compose up -d dev
+    echo "✓ Contenedor de desarrollo levantado"
+    ;;
+  down)
+    sudo docker compose down
+    echo "✓ Contenedor detenido"
+    ;;
+  bash)
+    sudo docker compose exec dev bash
+    ;;
+  test)
+    sudo docker compose exec dev cargo test
+    ;;
+  run)
+    sudo docker compose exec dev cargo run
+    ;;
+  build)
+    sudo docker compose exec dev cargo build
+    ;;
+  watch)
+    sudo docker compose exec dev cargo watch -x test
+    ;;
+  clean)
+    sudo docker compose exec dev cargo clean
+    ;;
+  *)
+    echo "Uso: ./dev [comando]"
+    echo ""
+    echo "Comandos disponibles:"
+    echo "  up       - Levanta el contenedor de desarrollo"
+    echo "  down     - Detiene el contenedor de desarrollo"
+    echo "  bash     - Abre una shell interactiva"
+    echo "  test     - Corre los tests"
+    echo "  run      - Ejecuta la app"
+    echo "  build    - Compila el proyecto"
+    echo "  watch    - Corre tests automáticamente al guardar"
+    echo "  clean    - Limpia el build"
+    exit 1
+    ;;
+esac
